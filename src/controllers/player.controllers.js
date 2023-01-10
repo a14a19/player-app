@@ -1,6 +1,6 @@
 const Players = require('../models/player.model');
 
-const getPlayers = (req, res) => {
+const getPlayers = async (req, res) => {
     Players.find({}).exec((err, data) => {
         if (err) {
             return res.status(500).send({ msg: "Internal server error." })
@@ -19,24 +19,37 @@ const getPlayer = (req, res) => {
 };
 
 // * to get single player, in client app, call a function then increase and decrease the skip() value to get different player in list.
-const getOnePlayer = (req, res) => {
-    Players.find({}).limit(1).skip(0).exec((err, data) => {
+const getOnePlayer = async (req, res) => {
+
+    // * To get total count of element present in DB
+    const totalRecords = await Players.countDocuments();
+    Players.find({}).skip(req.query.skip).limit(req.query.limit).exec((err, data) => {
         if (err) {
             return res.status(500).send({ msg: "Internal server error." })
         }
-        res.status(200).send({ data: data })
+        res.status(200).send({ data: data, totalCount: totalRecords })
     })
 }
 
-const createPlayer = (req, res) => {
-    const player = new Players(req.body);
+// const createPlayer = async (req, res) => {
+//     const player = new Players(req.body);
+//     player.save((err, player) => {
+//         if (err) {
+//             return res.status(500).send({ error: "Unable to create new player, Please try again." });
+//         }
+//         res.status(201).send(player);
+//     });
+// }
 
-    player.save((err, created) => {
+const createPlayer = async (req, res) => {
+    const player = new Players(req.body);
+    player.save((err, player) => {
         if (err) {
-            return res.status(500).send({ msg: "Unable to create new player, Please try again." });
+            return res.status(500).send({ error: 'Internal Server Error' });
         }
-        res.status(200).send({ result: created });
-    });
+        res.status(201).send(player);
+    })
+
 }
 
 const deletePlayer = (req, res) => {

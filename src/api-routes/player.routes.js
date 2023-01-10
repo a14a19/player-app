@@ -1,10 +1,11 @@
-const PlayerRoute = require('express').Router();
+const playerRoute = require('express').Router();
 const { getPlayers, getOnePlayer, getPlayer, createPlayer, deletePlayer } = require('../controllers/player.controllers');
+const { validateCreatePlayer, validateGetPlayer } = require('../validators/player.validators')
 
-PlayerRoute.get('/', getPlayers);
-PlayerRoute.get('/player', getOnePlayer);
-PlayerRoute.get('/:playerId', getPlayer);
-PlayerRoute.post('/', createPlayer);
-PlayerRoute.delete('/:playerId', deletePlayer);
+playerRoute.get('/', getPlayers);
+playerRoute.get('/player', validateGetPlayer, getOnePlayer);
+playerRoute.get('/:playerId', getPlayer);
+playerRoute.post('/', validateCreatePlayer, createPlayer);
+playerRoute.delete('/:playerId', deletePlayer);
 
-module.exports = PlayerRoute;
+module.exports = playerRoute;

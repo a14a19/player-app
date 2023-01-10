@@ -7,7 +7,8 @@ const PlayerSchema = new Schema ({
     playerCountry: String,
     totalMatch: Number,
     trophy: Number,
-    dateOfBirth: Date
+    dateOfBirth: Date,
+    image: String
 });
 
 module.exports = mongoose.model('Players', PlayerSchema);
